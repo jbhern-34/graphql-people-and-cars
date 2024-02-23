@@ -36,7 +36,7 @@ const CarCard = ({ car }) => {
           }
           actions={[
             <EditOutlined key="edit" onClick={handleButtonClick} />,
-            <RemoveCar id={id} />,
+            <RemoveCar id={id} personId={car.personId}/>,
           ]}
         ></Card>
       )}
