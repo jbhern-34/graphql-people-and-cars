@@ -1,7 +1,6 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
-import { GET_CAR, GET_PERSON_CARS, REMOVE_CAR } from "../../graphql/queries";
-import filter from "lodash.filter";
+import { GET_PERSON_CARS, REMOVE_CAR } from "../../graphql/queries";
 
 const RemoveCar = ({ id }) => {
   const [removeCar] = useMutation(REMOVE_CAR, {
