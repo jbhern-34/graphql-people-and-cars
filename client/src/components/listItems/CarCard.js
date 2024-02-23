@@ -3,12 +3,13 @@ import { Card } from "antd";
 import RemovePerson from "../buttons/RemovePerson";
 import UpdatePerson from "../forms/UpdatePerson";
 import { EditOutlined } from "@ant-design/icons";
-import Cars from "../list/Cars";
+import RemoveCar from "../buttons/RemoveCar";
+import UpdateCar from "../forms/UpdateCar";
 
-const PersonCard = (props) => {
-  const [editMode, setEditMode] = useState(false);
+const CarCard = ({ car }) => {
   const styles = getStyles();
-  const { id, firstName, lastName } = props;
+  const { id, make, model, personId, price, year } = car;
+  const [editMode, setEditMode] = useState(false);
 
   const handleButtonClick = () => {
     setEditMode(!editMode);
@@ -17,26 +18,29 @@ const PersonCard = (props) => {
   return (
     <div>
       {editMode ? (
-        <UpdatePerson
+        <UpdateCar
           id={id}
-          firstName={firstName}
-          lastName={lastName}
+          make={make}
+          model={model}
+          year={year}
+          price={price}
+          personId={personId}
           onButtonClick={handleButtonClick}
         />
       ) : (
         <Card
           style={styles.card}
+          type="inner"
+          title={
+            <span style={{ fontWeight: "normal" }}>
+              {year} {make} {model} =&gt; {price}
+            </span>
+          }
           actions={[
             <EditOutlined key="edit" onClick={handleButtonClick} />,
-            <RemovePerson id={id} />,
+            <RemoveCar id={id} />,
           ]}
-        >
-          {firstName} {lastName}
-          <div>
-            <Cars id={id} />
-          </div>
-          
-        </Card>
+        ></Card>
       )}
     </div>
   );
@@ -44,8 +48,9 @@ const PersonCard = (props) => {
 
 const getStyles = () => ({
   card: {
-    width: "500px",
+    marginTop: "1rem",
+    width: "450px",
   },
 });
 
-export default PersonCard;
+export default CarCard;

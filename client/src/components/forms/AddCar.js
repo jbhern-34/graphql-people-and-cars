@@ -1,30 +1,27 @@
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Form, Input, InputNumber, Select } from "antd";
-import { useMutation } from "@apollo/client";
-import { ADD_CAR, GET_PERSON_CARS } from "../../graphql/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { ADD_CAR, GET_PEOPLE, GET_PERSON_CARS } from "../../graphql/queries";
+
+const { Option } = Select;
 
 const AddCar = () => {
   const [id] = useState(uuidv4());
   const [form] = Form.useForm();
   const [, forceUpdate] = useState();
-  const { Option } = Select;
 
-  const [addCar] = useMutation(ADD_CAR);
+  const { loading, error, data } = useQuery(GET_PEOPLE);
+  const [addCar] = useMutation(ADD_CAR, {
+    refetchQueries: [{ query: GET_PERSON_CARS }],
+  });
 
   useEffect(() => {
     forceUpdate({});
   }, []);
 
   const onFinish = (values) => {
-    const { year, make, model, price, personId } = values; // Change person to personId
-
-    console.log("Year:", year);
-    console.log("Make:", make);
-    console.log("Model:", model);
-    console.log("Price:", price);
-    console.log("Person ID:", personId);
-
+    const { year, make, model, price, personId } = values;
     addCar({
       variables: {
         id,
@@ -32,32 +29,17 @@ const AddCar = () => {
         make,
         model,
         price: parseFloat(price),
-        personId, // Change person to personId
-      },
-      update: (cache, { data: { addCar } }) => {
-        const data = cache.readQuery({
-          query: GET_PERSON_CARS,
-          variables: { carsOwnedByPersonId: personId }, // Pass personId as variables to the query
-        });
-
-        cache.writeQuery({
-          query: GET_PERSON_CARS,
-          variables: { carsOwnedByPersonId: personId }, // Pass personId as variables to the query
-          data: {
-            ...data,
-            carsOwnedByPerson: {
-              ...data.carsOwnedByPerson,
-              cars: [...data.carsOwnedByPerson.cars, addCar], // Add the new car to the existing cars array
-            },
-          },
-        });
+        personId,
       },
     });
   };
 
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
+
   return (
     <Form
-      name="add-contact-form"
+      name="add-car-form"
       layout="inline"
       size="large"
       style={{ marginBottom: "40px" }}
@@ -67,49 +49,44 @@ const AddCar = () => {
       <Form.Item
         label="Year:"
         name="year"
-        rules={[{ required: true, message: "Please enter year" }]}
+        rules={[{ required: true, message: "Please enter a year" }]}
       >
-        <InputNumber placeholder="Year i.e 2012" min={1990} />
+        <InputNumber placeholder="2020" />
       </Form.Item>
-
       <Form.Item
-        label="Make:"
+      label="Make:"
         name="make"
         rules={[{ required: true, message: "Please enter a manufacturer" }]}
       >
-        <Input placeholder="Manufacturer" />
+        <Input placeholder="Toyota" />
       </Form.Item>
-
       <Form.Item
-        label="Model:"
+      label="Model:"
         name="model"
-        rules={[{ required: true, message: "Please Enter Model" }]}
+        rules={[{ required: true, message: "Please enter a model" }]}
       >
-        <Input placeholder="Model" />
+        <Input placeholder="Corolla" />
       </Form.Item>
-
       <Form.Item
-        label="Price:"
+      label="Price:"
         name="price"
-        rules={[{ required: true, message: "Please Enter Price" }]}
+        rules={[{ required: true, message: "Please enter a price" }]}
       >
-        <InputNumber prefix="$" placeholder="20,000" />
+        <InputNumber placeholder="20000" />
       </Form.Item>
-
-      {/* <Form.Item
-        label="Person"
+      <Form.Item
+      label="Person:"
         name="personId"
-        rules={[{ required: true, message: "Please Select a Person" }]}
+        rules={[{ required: true, message: "Please select a person" }]}
       >
-        <Select style={{ width: 200 }} placeholder="Select a Person">
-          {people.map(({ id, firstName, lastName }) => (
+        <Select placeholder="Select a person">
+          {data.people.map(({ id, firstName, lastName }) => (
             <Option key={id} value={id}>
               {firstName} {lastName}
             </Option>
           ))}
         </Select>
-      </Form.Item> */}
-
+      </Form.Item>
       <Form.Item shouldUpdate={true}>
         {() => (
           <Button
@@ -120,7 +97,7 @@ const AddCar = () => {
               form.getFieldsError().filter(({ errors }) => errors.length).length
             }
           >
-            Add Person
+            Add Car
           </Button>
         )}
       </Form.Item>

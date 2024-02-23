@@ -3,6 +3,7 @@ import { GET_PEOPLE } from "../../graphql/queries";
 import { List } from "antd";
 import PersonCard from "../listItems/PersonCard";
 
+
 const People = () => {
   const styles = getStyles();
   const { loading, error, data } = useQuery(GET_PEOPLE)
@@ -20,7 +21,7 @@ const People = () => {
         </List.Item>
       ))}
     </List>
-  )
+  ) 
 };
 
 const getStyles = () => ({

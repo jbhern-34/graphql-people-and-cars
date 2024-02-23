@@ -39,7 +39,7 @@ const AddPerson = () => {
 
   return (
     <Form
-      name="add-car-form"
+      name="add-person-form"
       layout="inline"
       size="large"
       style={{ marginBottom: "40px" }}

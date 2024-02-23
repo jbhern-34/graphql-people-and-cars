@@ -99,7 +99,6 @@ const typeDefs = `
         id: String!
         firstName: String!
         lastName: String!
-        cars: [Car]
     }
 
     type Car {
@@ -116,7 +115,7 @@ const typeDefs = `
         people: [Person]
         car(id: String!): Car
         cars: [Car]
-        carsOwnedByPerson(id: String!): Person
+        personWithCars(personId: String!): [Car]
     }
 
     type Mutation {
@@ -141,17 +140,11 @@ const resolvers = {
     car(root, args) {
       return find(carsArray, { id: args.id });
     },
-    carsOwnedByPerson: (root, args) => {
-      const person = find(peopleArray, { id: args.id });
-      if (!person) {
+    personWithCars: (root, args) => {
+      if (!args.personId) {
         throw new Error(`Couldn't find person with id ${args.id}`);
       }
-      const personsCars = carsArray.filter((car) => car.personId === args.id);
-      console.log(person)
-      return {
-        ...person,
-        cars: personsCars,
-      };
+      return carsArray.filter((car) => car.personId === args.personId);
     },
   },
 
@@ -185,18 +178,20 @@ const resolvers = {
       if (!removedPerson) {
         throw new Error(`Couldn\'t find person with id ${args.id}`);
       }
-    
+
       // Remove person
       remove(peopleArray, (person) => person.id === removedPerson.id);
-    
+
       // Remove cars owned by the removed person
-      const removedCars = remove(carsArray, (car) => car.personId === removedPerson.id);
-    
+      const removedCars = remove(
+        carsArray,
+        (car) => car.personId === removedPerson.id
+      );
+
       return removedPerson;
     },
-    
 
-    addCar: (_, args) => {
+    addCar: (root, args) => {
       const newCar = {
         id: args.id,
         year: args.year,
