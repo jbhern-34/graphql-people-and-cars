@@ -109,13 +109,18 @@ const typeDefs = `
         price: Float!
         personId: String!
     }
+
+    type PersonWithCars {
+      person: Person
+      cars: [Car]
+    }
   
     type Query {
         person(id: String!): Person
         people: [Person]
         car(id: String!): Car
         cars: [Car]
-        personWithCars(personId: String!): [Car]
+        personWithCars(personId: String!): PersonWithCars
     }
 
     type Mutation {
@@ -142,9 +147,12 @@ const resolvers = {
     },
     personWithCars: (root, args) => {
       if (!args.personId) {
-        throw new Error(`Couldn't find person with id ${args.id}`);
+        throw new Error(`Couldn't find person with id ${args.personId}`);
       }
-      return carsArray.filter((car) => car.personId === args.personId);
+
+      const person = find(peopleArray, { id: args.personId });
+      const cars = carsArray.filter((car) => car.personId === args.personId);
+      return { person, cars };
     },
   },
 

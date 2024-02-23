@@ -14,11 +14,11 @@ const Cars = ({ id }) => {
   if (error) return `Error! ${error.message}`;
 
   console.log("data", data);
-  const cars = data && data.personWithCars;
+  const cars = data && data.personWithCars && data.personWithCars.cars;
 
   return (
     <List grid={{ gutter: 20, column: 1 }} style={styles.list}>
-      {cars.map(
+      {cars && cars.map(
         (car => (
           <List.Item key={car.id}>
             <CarCard

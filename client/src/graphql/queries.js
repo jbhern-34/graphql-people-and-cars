@@ -13,12 +13,19 @@ export const GET_PEOPLE = gql`
 export const GET_PERSON_CARS = gql`
   query PersonWithCars($personId: String!) {
     personWithCars(personId: $personId) {
-      id
-      make
-      model
-      year
-      price
-      personId
+      person {
+        id
+        firstName
+        lastName
+      }
+      cars {
+        id
+        make
+        model
+        year
+        price
+        personId
+      }
     }
   }
 `;
