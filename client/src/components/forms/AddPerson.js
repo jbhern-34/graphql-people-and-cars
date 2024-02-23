@@ -38,45 +38,51 @@ const AddPerson = () => {
   };
 
   return (
-    <Form
-      name="add-person-form"
-      layout="inline"
-      size="large"
-      style={{ marginBottom: "40px" }}
-      form={form}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        label="First Name:"
-        name="firstName"
-        rules={[{ required: true, message: "Please enter a first name" }]}
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <hr style={{ flexGrow: "1" }} />
+        <h2>Add Person</h2>
+        <hr style={{ flexGrow: "1" }} />
+      </div>
+      <Form
+        name="add-person-form"
+        layout="inline"
+        size="large"
+        style={{ marginBottom: "40px" }}
+        form={form}
+        onFinish={onFinish}
       >
-        <Input placeholder="i.e. John" />
-      </Form.Item>
-
-      <Form.Item
-        label="Last Name:"
-        name="lastName"
-        rules={[{ required: true, message: "Please enter a last name" }]}
-      >
-        <Input placeholder="i.e. Smith" />
-      </Form.Item>
-
-      <Form.Item shouldUpdate={true}>
-        {() => (
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={
-              !form.isFieldsTouched(true) ||
-              form.getFieldsError().filter(({ errors }) => errors.length).length
-            }
-          >
-            Add Person
-          </Button>
-        )}
-      </Form.Item>
-    </Form>
+        <Form.Item
+          label="First Name:"
+          name="firstName"
+          rules={[{ required: true, message: "Please enter a first name" }]}
+        >
+          <Input placeholder="i.e. John" />
+        </Form.Item>
+        <Form.Item
+          label="Last Name:"
+          name="lastName"
+          rules={[{ required: true, message: "Please enter a last name" }]}
+        >
+          <Input placeholder="i.e. Smith" />
+        </Form.Item>
+        <Form.Item shouldUpdate={true}>
+          {() => (
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={
+                !form.isFieldsTouched(true) ||
+                form.getFieldsError().filter(({ errors }) => errors.length)
+                  .length
+              }
+            >
+              Add Person
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

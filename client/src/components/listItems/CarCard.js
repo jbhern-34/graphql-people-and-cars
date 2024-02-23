@@ -31,7 +31,7 @@ const CarCard = ({ car }) => {
           type="inner"
           title={
             <span style={{ fontWeight: "normal" }}>
-              {year} {make} {model} =&gt; {price}
+              {year} {make} {model} =&gt; ${price}
             </span>
           }
           actions={[

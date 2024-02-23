@@ -34,74 +34,83 @@ const AddCar = () => {
     });
   };
 
-  if (loading) return 'Loading...';
+  if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
   return (
-    <Form
-      name="add-car-form"
-      layout="inline"
-      size="large"
-      style={{ marginBottom: "40px" }}
-      form={form}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        label="Year:"
-        name="year"
-        rules={[{ required: true, message: "Please enter a year" }]}
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <hr style={{ flexGrow: "1" }} />
+        <h2>Add Car</h2>
+        <hr style={{ flexGrow: "1" }} />
+      </div>
+
+      <Form
+        name="add-car-form"
+        layout="inline"
+        size="large"
+        style={{ marginBottom: "40px" }}
+        form={form}
+        onFinish={onFinish}
       >
-        <InputNumber placeholder="2020" />
-      </Form.Item>
-      <Form.Item
-      label="Make:"
-        name="make"
-        rules={[{ required: true, message: "Please enter a manufacturer" }]}
-      >
-        <Input placeholder="Toyota" />
-      </Form.Item>
-      <Form.Item
-      label="Model:"
-        name="model"
-        rules={[{ required: true, message: "Please enter a model" }]}
-      >
-        <Input placeholder="Corolla" />
-      </Form.Item>
-      <Form.Item
-      label="Price:"
-        name="price"
-        rules={[{ required: true, message: "Please enter a price" }]}
-      >
-        <InputNumber placeholder="20000" />
-      </Form.Item>
-      <Form.Item
-      label="Person:"
-        name="personId"
-        rules={[{ required: true, message: "Please select a person" }]}
-      >
-        <Select placeholder="Select a person">
-          {data.people.map(({ id, firstName, lastName }) => (
-            <Option key={id} value={id}>
-              {firstName} {lastName}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item shouldUpdate={true}>
-        {() => (
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={
-              !form.isFieldsTouched(true) ||
-              form.getFieldsError().filter(({ errors }) => errors.length).length
-            }
-          >
-            Add Car
-          </Button>
-        )}
-      </Form.Item>
-    </Form>
+        <Form.Item
+          label="Year:"
+          name="year"
+          rules={[{ required: true, message: "Please enter a year" }]}
+        >
+          <InputNumber placeholder="2020" />
+        </Form.Item>
+        <Form.Item
+          label="Make:"
+          name="make"
+          rules={[{ required: true, message: "Please enter a manufacturer" }]}
+        >
+          <Input placeholder="Toyota" />
+        </Form.Item>
+        <Form.Item
+          label="Model:"
+          name="model"
+          rules={[{ required: true, message: "Please enter a model" }]}
+        >
+          <Input placeholder="Corolla" />
+        </Form.Item>
+        <Form.Item
+          label="Price:"
+          name="price"
+          rules={[{ required: true, message: "Please enter a price" }]}
+        >
+          <InputNumber placeholder="20000" />
+        </Form.Item>
+        <Form.Item
+          label="Person:"
+          name="personId"
+          rules={[{ required: true, message: "Please select a person" }]}
+        >
+          <Select placeholder="Select a person">
+            {data.people.map(({ id, firstName, lastName }) => (
+              <Option key={id} value={id}>
+                {firstName} {lastName}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item shouldUpdate={true}>
+          {() => (
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={
+                !form.isFieldsTouched(true) ||
+                form.getFieldsError().filter(({ errors }) => errors.length)
+                  .length
+              }
+            >
+              Add Car
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
