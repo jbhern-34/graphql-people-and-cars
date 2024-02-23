@@ -1,7 +1,7 @@
 import { Button, Form, Input, InputNumber, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_PEOPLE, UPDATE_CAR } from "../../graphql/queries";
+import { GET_PEOPLE, GET_PERSON_CARS, UPDATE_CAR } from "../../graphql/queries";
 
 const { Option } = Select;
 
@@ -19,14 +19,47 @@ const UpdateCar = (props) => {
 
 
   const onFinish = (values) => {
+    const newPersonId = values.personId;
     updateCar({
       variables: {
         id,
         ...values,
       },
+      update: (cache, { data: { updateCar } }) => {
+        // Refetch the cars for the old person
+        const oldData = cache.readQuery({ query: GET_PERSON_CARS, variables: { personId } });
+        const updatedOldCars = oldData.personWithCars.cars.filter(car => car.id !== updateCar.id);
+        cache.writeQuery({
+          query: GET_PERSON_CARS,
+          variables: { personId },
+          data: {
+            ...oldData,
+            personWithCars: {
+              ...oldData.personWithCars,
+              cars: updatedOldCars,
+            },
+          },
+        });
+  
+        // Refetch the cars for the new person
+        const newData = cache.readQuery({ query: GET_PERSON_CARS, variables: { personId: newPersonId } });
+        const updatedNewCars = [...newData.personWithCars.cars, updateCar];
+        cache.writeQuery({
+          query: GET_PERSON_CARS,
+          variables: { personId: newPersonId },
+          data: {
+            ...newData,
+            personWithCars: {
+              ...newData.personWithCars,
+              cars: updatedNewCars,
+            },
+          },
+        });
+      },
     });
     props.onButtonClick();
   };
+  
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;

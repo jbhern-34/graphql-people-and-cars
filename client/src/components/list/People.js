@@ -6,7 +6,7 @@ import PersonCard from "../listItems/PersonCard";
 
 const People = () => {
   const styles = getStyles();
-  const { loading, error, data } = useQuery(GET_PEOPLE)
+  const { loading, error, data, refetch } = useQuery(GET_PEOPLE)
 
   if (loading) return 'Loading...'
   if (error) return `Error! ${error.message}`
@@ -17,7 +17,7 @@ const People = () => {
     <List grid={{ gutter: 20, column: 1 }} style={styles.list}>
       {data.people.map(({ id, firstName, lastName }) => (
         <List.Item key={id}>
-          <PersonCard id={id} firstName={firstName} lastName={lastName} />
+          <PersonCard id={id} firstName={firstName} lastName={lastName} refetchPeople={refetch} />
         </List.Item>
       ))}
     </List>

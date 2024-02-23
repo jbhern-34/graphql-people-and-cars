@@ -31,6 +31,21 @@ const AddCar = () => {
         price: parseFloat(price),
         personId,
       },
+      update: (cache, { data: { addCar } }) => {
+        const data = cache.readQuery({ query: GET_PERSON_CARS, variables: { personId } });
+
+        cache.writeQuery({
+          query: GET_PERSON_CARS,
+          variables: { personId },
+          data: {
+            ...data,
+            personWithCars: {
+              ...data.personWithCars,
+              cars: [...data.personWithCars.cars, addCar],
+            },
+          },
+        });
+      },
     });
   };
 
